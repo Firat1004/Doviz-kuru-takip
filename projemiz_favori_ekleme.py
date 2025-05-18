@@ -142,53 +142,6 @@ def kur_takip_et(doviz_kodu, hedef_deger, kontrol_tipi="ForexBuying", kontrol_ar
         
         time.sleep(kontrol_araligi)
 
-def menu():
-    kur = DovizKurları()
-    veriler = kur.DegerSor()
-
-    if isinstance(veriler, str) and veriler.startswith("HATA"):
-        print(veriler)
-        return
-
-    while True:
-        print("\n--- Döviz Kuru Menüsü ---")
-        print("1. Tüm Dövizleri Listele")
-        print("2. Belirli Döviz Kuru Göster (örnek: USD, EUR, GBP)")
-        print("3. Döviz Takibi Başlat")
-        print("4. Çıkış")
-        secim = input("Seçiminiz (1-4): ")
-
-        if secim == "1":
-            for kod, bilgiler in veriler.items():
-                print(f"{kod}: {bilgiler['CurrencyName']} - Alış: {bilgiler['ForexBuying']} / Satış: {bilgiler['ForexSelling']}")
-        elif secim == "2":
-            kod = input("Döviz kodunu giriniz (örnek: USD): ").upper()
-            if kod in veriler:
-                bilgiler = veriler[kod]
-                print(f"\n{kod} - {bilgiler['CurrencyName']}")
-                print(f"Alış: {bilgiler['ForexBuying']}")
-                print(f"Satış: {bilgiler['ForexSelling']}")
-                print(f"Banknot Alış: {bilgiler['BanknoteBuying']}")
-                print(f"Banknot Satış: {bilgiler['BanknoteSelling']}")
-            else:
-                print("Geçersiz döviz kodu. Lütfen tekrar deneyin.")
-        elif secim == "3":
-            kod = input("Takip edilecek döviz kodu (örnek: USD): ").upper()
-            tip = input("Hangi değer takip edilecek? (ForexBuying / ForexSelling): ").strip()
-            hedef = input(f"Hedef {tip} değeri: ").replace(",", ".")
-            try:
-                hedef_float = float(hedef)
-                takip_thread = threading.Thread(target=kur_takip_et, args=(kod, hedef_float, tip), daemon=True)
-                takip_thread.start()
-            except ValueError:
-                print("Hedef değer sayı olmalıdır.")
-        elif secim == "4":
-            print("Çıkılıyor...")
-            break
-        else:
-            print("Geçersiz seçim. Lütfen 1, 2, 3 veya 4 giriniz.")
-
-menu()
 
 
 class AdvancedDovizUygulamasi:

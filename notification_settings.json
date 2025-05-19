@@ -1,5 +1,5 @@
 {
-  "sound_enabled": true,
+  "sound_enabled": false,
   "sound_file": "custom",
   "popup_enabled": true,
   "history_enabled": true,

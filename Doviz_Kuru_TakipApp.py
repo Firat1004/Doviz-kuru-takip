@@ -125,7 +125,7 @@ class DovizKurlari():
         return self.url
 
 def kur_takip_et(doviz_kodu, hedef_deger, kontrol_tipi="ForexBuying", kontrol_araligi=300):
-    kur = DovizKurları()
+    kur = DovizKurlari()
     print(f"[Takip Başladı] {doviz_kodu} için {kontrol_tipi} değeri {hedef_deger}'in altına düşünce bildirim yapılacak.")
 
     while True:

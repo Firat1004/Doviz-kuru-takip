@@ -10,7 +10,7 @@ import time
 from plyer import notification
 import winsound  # Windows için ses bildirimleri
 import pygame   # Diğer platformlar için ses bildirimleri
-
+from tkinter import filedialog
 
 class DovizKurlari():
     def __init__(self):
@@ -400,7 +400,6 @@ class AdvancedDovizUygulamasi:
 
     def select_custom_sound(self):
         """Özel ses dosyası seçmek için dosya iletişim kutusu açar"""
-        from tkinter import filedialog
         file_path = filedialog.askopenfilename(
             title="Ses Dosyası Seç",
             filetypes=[("WAV Dosyaları", "*.wav"), ("Tüm Dosyalar", "*.*")]
@@ -423,14 +422,20 @@ class AdvancedDovizUygulamasi:
 
     def show_notification_settings(self):
         """Genel bildirim ayarları penceresini gösterir"""
-        settings_win = tk.Toplevel(self.root)
-        settings_win.title("Bildirim Ayarları")
-        settings_win.geometry("500x400")    
+        # Pencere zaten açıksa öne getir
+        if hasattr(self, 'settings_win') and self.settings_win.winfo_exists():
+            self.settings_win.lift()
+            return
+
+        self.settings_win = tk.Toplevel(self.root)
+        self.settings_win.title("Bildirim Ayarları")
+        self.settings_win.geometry("500x400")
+        self.settings_win.protocol("WM_DELETE_WINDOW", self.on_settings_window_close)
+    
 
         # Ses Ayarları
-        sound_frame = tk.LabelFrame(settings_win, text="Ses Ayarları", padx=10, pady=10)
+        sound_frame = tk.LabelFrame(self.settings_win, text="Ses Ayarları", padx=10, pady=10)
         sound_frame.pack(fill="x", padx=10, pady=5)
-        
         
         # Ses seçenekleri
         sound_options_frame = tk.Frame(sound_frame)
@@ -439,37 +444,37 @@ class AdvancedDovizUygulamasi:
         self.sound_type_var = tk.StringVar(value=self.notification_settings["sound_file"])
         
         tk.Radiobutton(sound_options_frame, text="Varsayılan", variable=self.sound_type_var, 
-                      value="default", command=self.update_sound_type).pack(anchor="w")
+                    value="default", command=self.update_sound_type).pack(anchor="w")
         tk.Radiobutton(sound_options_frame, text="Özel Ses", variable=self.sound_type_var, 
-                      value="custom", command=self.update_sound_type).pack(anchor="w")
+                    value="custom", command=self.update_sound_type).pack(anchor="w")
         
         # Özel ses dosyası seçme butonu
         self.custom_sound_button = tk.Button(sound_options_frame, text="Ses Dosyası Seç",
                                              command=self.select_custom_sound)
-        self.custom_sound_button.pack(anchor="w", pady=5)
+        self.custom_sound_button.pack(anchor="w",pady=5)
 
         # Popup Ayarları
-        popup_frame = tk.LabelFrame(settings_win, text="Popup Ayarları", padx=10, pady=10)
+        popup_frame = tk.LabelFrame(self.settings_win, text="Popup Ayarları", padx=10, pady=10)
         popup_frame.pack(fill="x", padx=10, pady=5)
         
         self.popup_var = tk.BooleanVar(value=self.notification_settings["popup_enabled"])
         popup_cb = tk.Checkbutton(popup_frame, text="Masaüstü bildirimi göster", 
-                                 variable=self.popup_var,
-                                 command=lambda: self.update_setting("popup_enabled", self.popup_var.get()))
+                                variable=self.popup_var,
+                                command=lambda: self.update_setting("popup_enabled", self.popup_var.get()))
         popup_cb.pack(anchor="w")
         
         # Kontrol Aralığı
-        interval_frame = tk.LabelFrame(settings_win, text="Kontrol Aralığı (saniye)", padx=10, pady=10)
+        interval_frame = tk.LabelFrame(self.settings_win, text="Kontrol Aralığı (saniye)", padx=10, pady=10)
         interval_frame.pack(fill="x", padx=10, pady=5)
         
         self.interval_var = tk.IntVar(value=self.notification_settings["interval"])
         interval_spin = tk.Spinbox(interval_frame, from_=60, to=3600, increment=60,
-                                 textvariable=self.interval_var,
-                                 command=lambda: self.update_setting("interval", self.interval_var.get()))
+                                textvariable=self.interval_var,
+                                command=lambda: self.update_setting("interval", self.interval_var.get()))
         interval_spin.pack(anchor="w")
         
         # Bildirim Geçmişi
-        history_frame = tk.LabelFrame(settings_win, text="Bildirim Geçmişi", padx=10, pady=10)
+        history_frame = tk.LabelFrame(self.settings_win, text="Bildirim Geçmişi", padx=10, pady=10)
         history_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
         history_scroll = tk.Scrollbar(history_frame)
@@ -483,6 +488,13 @@ class AdvancedDovizUygulamasi:
         # Geçmişi doldur
         for notif in self.notification_history[-20:]:  # Son 20 bildirimi göster
             self.history_list.insert(tk.END, notif)
+
+
+    def on_settings_window_close(self):
+        """Ayarlar penceresi kapatıldığında çağrılır"""
+        if hasattr(self, 'settings_win'):
+            self.settings_win.destroy()
+            del self.settings_win
 
     def update_setting(self, key, value):
         """Ayarları günceller"""

@@ -612,12 +612,13 @@ class AdvancedDovizUygulamasi:
                                        width=15, height=4, relief="ridge", bd=2)
                 banknot_satış.pack(side="left", padx=10)
 
-                # Favori ekleme butonu
-                fav_btn = tk.Button(self.main_frame, text="⭐ Favorilere Ekle", font=("Arial", 12),
-                                  command=lambda kod=result.get("Kod"): self.favori_ekle(kod),
-                                  bg=self.themes[self.theme_mode]["button_bg"],
-                                  fg=self.themes[self.theme_mode]["button_fg"])
-                fav_btn.pack(pady=10)
+                # Favori ekleme/kaldırma butonu - DEĞİŞTİRİLDİ
+                fav_button_text = "❌ Favoriyi Kaldır" if result.get("Kod") in self.favoriler else "⭐ Favorilere Ekle"
+                self.fav_btn = tk.Button(self.main_frame, text=fav_button_text, font=("Arial", 12),
+                                    command=lambda kod=result.get("Kod"): self.toggle_favori(kod),
+                                    bg=self.themes[self.theme_mode]["button_bg"],
+                                    fg=self.themes[self.theme_mode]["button_fg"])
+                self.fav_btn.pack(pady=10)
 
                 # Bildirim ayarları bölümü ekliyoruz
                 notif_frame = tk.LabelFrame(self.main_frame, text="Bildirim Ayarları", 
@@ -753,6 +754,13 @@ class AdvancedDovizUygulamasi:
                 print(f"Takip sırasında hata: {e}")
                 time.sleep(interval)
 
+    def toggle_favori(self, kod):
+        """Favori ekleme/kaldırma işlemini tek butonla yönetir"""
+        if kod in self.favoriler:
+            self.favori_cikar(kod)
+        else:
+            self.favori_ekle(kod)
+
     def show_favoriler(self):
         self.favoriler_gosterildi = True
         for widget in self.main_frame.winfo_children():
@@ -781,11 +789,11 @@ class AdvancedDovizUygulamasi:
 
                 # Tıklanabilir döviz ismi
                 btn = tk.Button(frame, text=f"{kod} - {result.get('isim', '')}",
-                               font=("Arial", 14), 
-                               bg=self.themes[self.theme_mode]["bg"], 
-                               fg=self.themes[self.theme_mode]["fg"],
-                               bd=0, anchor="w",
-                               command=lambda k=kod: self.show_currency_from_fav(k))
+                            font=("Arial", 14), 
+                            bg=self.themes[self.theme_mode]["bg"], 
+                            fg=self.themes[self.theme_mode]["fg"],
+                            bd=0, anchor="w",
+                            command=lambda k=kod: self.show_currency_from_fav(k))
                 btn.pack(side="left", padx=10)
 
                 # Alış ve satış birlikte gösteriliyor
@@ -799,13 +807,6 @@ class AdvancedDovizUygulamasi:
                     fg=self.themes[self.theme_mode]["fg"]
                 )
                 fiyat_label.pack(side="right", padx=10)
-    
-                # ❌ Kaldır butonu
-                remove_btn = tk.Button(frame, text="❌ Kaldır", font=("Arial", 10),
-                                     command=lambda k=kod: self.favori_cikar(k),
-                                     bg=self.themes[self.theme_mode]["button_bg"],
-                                     fg=self.themes[self.theme_mode]["button_fg"])
-                remove_btn.pack(side="right", padx=10)
 
     def favorileri_yukle(self):
         if os.path.exists("favoriler.json"):
@@ -828,14 +829,24 @@ class AdvancedDovizUygulamasi:
         self.favoriler.add(kod)
         self.favorileri_kaydet()
         messagebox.showinfo("Favori Eklendi", f"{kod} favorilere eklendi.")
+        # Buton metnini güncelle
+        if hasattr(self, 'fav_btn'):
+            self.fav_btn.config(text="❌ Favoriyi Kaldır")
+        # Favoriler ekranını güncelle
+        if hasattr(self, 'favoriler_gosterildi'):
+            self.show_favoriler()
     
     def favori_cikar(self, kod):
         if kod in self.favoriler:
             self.favoriler.remove(kod)
-            self.favorileri_kaydet()  # Favorileri dosyaya kaydet
-            self.show_favoriler()      # Favoriler ekranını güncelle
+            self.favorileri_kaydet()
             messagebox.showinfo("Favori Kaldırıldı", f"{kod} favorilerden çıkarıldı.")
-
+            # Buton metnini güncelle
+            if hasattr(self, 'fav_btn'):
+                self.fav_btn.config(text="⭐ Favorilere Ekle")
+            # Favoriler ekranını güncelle
+            if hasattr(self, 'favoriler_gosterildi'):
+                self.show_favoriler()
     
     def show_currency_from_fav(self, kod):
         # ✅ Favori listesinden tıklanarak detay göster

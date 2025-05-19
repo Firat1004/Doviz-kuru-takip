@@ -12,5 +12,12 @@
     "target_value": "43.",
     "condition": "above",
     "running": true
+  },
+  "KWD": {
+    "enabled": true,
+    "target_type": "ForexBuying",
+    "target_value": "124",
+    "condition": "above",
+    "running": false
   }
 }

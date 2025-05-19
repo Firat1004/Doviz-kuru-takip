@@ -295,6 +295,9 @@ class AdvancedDovizUygulamasi:
         self.falling_button = tk.Button(self.left_frame, text="📉 Düşük Birim Kurları", width=20)
         self.falling_button.pack(pady=10)
 
+        self.menu_button = tk.Button(self.left_frame, text="🏠 Ana Sayfa", width=20, command=self.show_anasayfa)
+        self.menu_button.pack(pady=10)
+
         # ✅ Butonlara işlev bağlanıyor
         self.rising_button.config(command=self.en_degerli_goster)
         self.falling_button.config(command=self.en_degersiz_goster)
@@ -383,6 +386,15 @@ class AdvancedDovizUygulamasi:
                         fg=self.themes[self.theme_mode]["fg"])
             lbl.pack(anchor="w", padx=20)
 
+    def show_anasayfa(self):
+        for widget in self.main_frame.winfo_children():
+            widget.destroy()
+
+        self.main_label = tk.Label(self.main_frame, text="İçerik burada gösterilecek", 
+                                font=("Arial", 14), 
+                                bg=self.themes[self.theme_mode]["bg"],
+                                fg=self.themes[self.theme_mode]["fg"])
+        self.main_label.pack(pady=20)
 
     def show_notification_settings(self):
         """Genel bildirim ayarları penceresini gösterir"""

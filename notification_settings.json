@@ -1,0 +1,7 @@
+{
+  "sound_enabled": true,
+  "sound_file": "default",
+  "popup_enabled": true,
+  "history_enabled": true,
+  "interval": 60
+}

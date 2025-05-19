@@ -416,8 +416,8 @@ class AdvancedDovizUygulamasi:
             except Exception as e:
                 messagebox.showerror("Hata", f"Ses dosyası yüklenirken hata oluştu: {e}")
 
-        def update_sound_type(self):
-            """Ses tipi güncellendiğinde çalışır"""
+    def update_sound_type(self):
+        """Ses tipi güncellendiğinde çalışır"""
         self.notification_settings["sound_file"] = self.sound_type_var.get()
         self.save_settings()  
 

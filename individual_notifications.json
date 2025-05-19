@@ -1,10 +1,10 @@
 {
   "USD": {
     "enabled": true,
-    "target_type": "BanknoteBuying",
+    "target_type": "ForexSelling",
     "target_value": "38",
     "condition": "above",
-    "running": false
+    "running": true
   },
   "EUR": {
     "enabled": false,

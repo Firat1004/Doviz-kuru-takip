@@ -19,5 +19,11 @@
     "target_value": "124",
     "condition": "above",
     "running": false
+  },
+  "GBP": {
+    "enabled": true,
+    "target_type": "ForexBuying",
+    "target_value": "",
+    "condition": "below"
   }
 }

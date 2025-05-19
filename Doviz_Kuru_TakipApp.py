@@ -927,9 +927,64 @@ class AdvancedDovizUygulamasi:
             self.lb = None
             self.search_currency()
 
+# Kullanıcı bilgileri (gerçek uygulamada veritabanı veya şifreli dosyada saklanmalı)
+VALID_USERNAME = "admin"
+VALID_PASSWORD = "12345"
 
+class LoginWindow:
+    def __init__(self, master):
+        self.master = master
+        master.title("Giriş Yap")
+        master.geometry("300x200")
+        master.resizable(False, False)
+        
+        # Merkezlemek için
+        window_width = master.winfo_reqwidth()
+        window_height = master.winfo_reqheight()
+        position_right = int(master.winfo_screenwidth()/2 - window_width/2 - 150)
+        position_down = int(master.winfo_screenheight()/2 - window_height/2 - 100)
+        master.geometry(f"+{position_right}+{position_down}")
+        
+        # Widget'lar
+        self.label = tk.Label(master, text="Lütfen Giriş Yapın", font=("Arial", 14))
+        self.label.pack(pady=10)
+        
+        self.username_label = tk.Label(master, text="Kullanıcı Adı:")
+        self.username_label.pack()
+        
+        self.username_entry = tk.Entry(master)
+        self.username_entry.pack(pady=5)
+        
+        self.password_label = tk.Label(master, text="Şifre:")
+        self.password_label.pack()
+        
+        self.password_entry = tk.Entry(master, show="*")
+        self.password_entry.pack(pady=5)
+        
+        self.login_button = tk.Button(master, text="Giriş Yap", command=self.check_credentials)
+        self.login_button.pack(pady=10)
+        
+        # Enter tuşu ile giriş yapma
+        master.bind('<Return>', lambda event: self.check_credentials())
+    
+    def check_credentials(self):
+        username = self.username_entry.get()
+        password = self.password_entry.get()
+        
+        if username == VALID_USERNAME and password == VALID_PASSWORD:
+            self.master.destroy()  # Giriş penceresini kapat
+            self.open_main_app()  # Ana uygulamayı başlat
+        else:
+            messagebox.showerror("Hata", "Geçersiz kullanıcı adı veya şifre!")
+            self.password_entry.delete(0, tk.END)  # Şifreyi temizle
+    
+    def open_main_app(self):
+        # Ana uygulamayı başlat
+        root = tk.Tk()
+        app = AdvancedDovizUygulamasi(root)
+        root.mainloop()
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = AdvancedDovizUygulamasi(root)
-    root.mainloop()
+# İlk olarak giriş penceresini başlat
+login_root = tk.Tk()
+login_app = LoginWindow(login_root)
+login_root.mainloop()

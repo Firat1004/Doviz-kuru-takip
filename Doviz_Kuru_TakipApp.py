@@ -396,6 +396,31 @@ class AdvancedDovizUygulamasi:
                                 fg=self.themes[self.theme_mode]["fg"])
         self.main_label.pack(pady=20)
 
+
+
+    def select_custom_sound(self):
+        """Özel ses dosyası seçmek için dosya iletişim kutusu açar"""
+        from tkinter import filedialog
+        file_path = filedialog.askopenfilename(
+            title="Ses Dosyası Seç",
+            filetypes=[("WAV Dosyaları", "*.wav"), ("Tüm Dosyalar", "*.*")]
+        )
+        
+        if file_path:
+            try:
+                import shutil
+                shutil.copy(file_path, "notification.wav")
+                self.notification_settings["sound_file"] = "custom"
+                self.save_settings()
+                messagebox.showinfo("Başarılı", "Özel ses dosyası başarıyla ayarlandı!")
+            except Exception as e:
+                messagebox.showerror("Hata", f"Ses dosyası yüklenirken hata oluştu: {e}")
+
+        def update_sound_type(self):
+            """Ses tipi güncellendiğinde çalışır"""
+        self.notification_settings["sound_file"] = self.sound_type_var.get()
+        self.save_settings()  
+
     def show_notification_settings(self):
         """Genel bildirim ayarları penceresini gösterir"""
         settings_win = tk.Toplevel(self.root)
@@ -406,10 +431,6 @@ class AdvancedDovizUygulamasi:
         sound_frame = tk.LabelFrame(settings_win, text="Ses Ayarları", padx=10, pady=10)
         sound_frame.pack(fill="x", padx=10, pady=5)
         
-        self.sound_var = tk.BooleanVar(value=self.notification_settings["sound_enabled"])
-        sound_cb = tk.Checkbutton(sound_frame, text="Sesli bildirim", variable=self.sound_var,
-                                command=lambda: self.update_setting("sound_enabled", self.sound_var.get()))
-        sound_cb.pack(anchor="w")
         
         # Ses seçenekleri
         sound_options_frame = tk.Frame(sound_frame)
@@ -422,6 +443,11 @@ class AdvancedDovizUygulamasi:
         tk.Radiobutton(sound_options_frame, text="Özel Ses", variable=self.sound_type_var, 
                       value="custom", command=self.update_sound_type).pack(anchor="w")
         
+        # Özel ses dosyası seçme butonu
+        self.custom_sound_button = tk.Button(sound_options_frame, text="Ses Dosyası Seç",
+                                             command=self.select_custom_sound)
+        self.custom_sound_button.pack(anchor="w", pady=5)
+
         # Popup Ayarları
         popup_frame = tk.LabelFrame(settings_win, text="Popup Ayarları", padx=10, pady=10)
         popup_frame.pack(fill="x", padx=10, pady=5)

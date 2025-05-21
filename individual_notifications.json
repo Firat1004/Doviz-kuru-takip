@@ -4,7 +4,7 @@
     "target_type": "ForexSelling",
     "target_value": "38",
     "condition": "above",
-    "running": true
+    "running": false
   },
   "EUR": {
     "enabled": false,

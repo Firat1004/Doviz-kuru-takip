@@ -124,7 +124,7 @@ class DovizKurlari():
         self.url = f"http://www.tcmb.gov.tr/kurlar/{Yil}{Ay}/{Gun}{Ay}{Yil}.xml"
         return self.url
 
-def kur_takip_et(doviz_kodu, hedef_deger, kontrol_tipi="ForexBuying", kontrol_araligi=300):
+def kur_takip_et(doviz_kodu, hedef_deger, kontrol_tipi="ForexBuying", kontrol_araligi=5):
     kur = DovizKurlari()
     print(f"[Takip Başladı] {doviz_kodu} için {kontrol_tipi} değeri {hedef_deger}'in altına düşünce bildirim yapılacak.")
 

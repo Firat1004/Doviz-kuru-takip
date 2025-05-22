@@ -18,3 +18,18 @@ Python 3.x ile birlikte aşağıdaki kütüphaneler gereklidir:
 
 ```bash
 pip install pygame plyer
+
+## Kullanım
+
+# Uygulamayı çalıştırmak için:
+python Doviz_Kuru_TakipApp.py
+
+# Açılan giriş penceresinde:
+# Kullanıcı Adı: admin
+# Şifre: 12345
+
+# Giriş yaptıktan sonra döviz bilgilerini görüntüleyebilir,
+# favorilerinizi yönetebilir ve fiyat takibi için alarm kurabilirsiniz.
+
+
+

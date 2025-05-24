@@ -18,12 +18,19 @@
     "target_type": "ForexBuying",
     "target_value": "124",
     "condition": "above",
-    "running": true
+    "running": false
   },
   "GBP": {
     "enabled": true,
     "target_type": "ForexBuying",
     "target_value": "",
     "condition": "below"
+  },
+  "JPY": {
+    "enabled": true,
+    "target_type": "ForexBuying",
+    "target_value": "26",
+    "condition": "above",
+    "running": true
   }
 }
